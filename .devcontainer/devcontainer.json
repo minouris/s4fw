@@ -1,0 +1,18 @@
+{
+  "name": "Sims 4 Modding (Python 3.7)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.envFile": "${workspaceFolder}/.env"
+      },
+      "extensions": [
+        "ms-python.python"
+      ]
+    }
+  },
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "pip install -r requirements.txt || true"
+}

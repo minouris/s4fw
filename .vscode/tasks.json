@@ -1,0 +1,28 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Decompile EA Scripts",
+      "type": "shell",
+      "command": "python -m unpyc3 ea_compiled -o lib/ea",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Import EA Compiled Files",
+      "type": "shell",
+      "command": "python tools/import_ea_zips.py",
+      "group": "build",
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
