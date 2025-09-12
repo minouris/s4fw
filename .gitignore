@@ -47,12 +47,13 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
-ea_compiled/
-
 # External libraries and binaries
-lib/external/
-ea_compiled/
-lib/ea/
+lib/external/*
+!lib/external/.gitinclude
+ea_compiled/*
+!ea_compiled/.gitinclude
+lib/ea/*
+!lib/ea/.gitinclude
 *.zip
 *.7z
 *.tar.gz
