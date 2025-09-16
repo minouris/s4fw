@@ -4,7 +4,7 @@
     {
       "label": "Decompile EA Scripts",
       "type": "shell",
-  "command": "python /opt/unpyc3/unpyc3.py ea_compiled -o lib/ea",
+      "command": "bash tools/decompile.sh",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -24,5 +24,16 @@
       },
       "problemMatcher": []
     }
+      ,
+      {
+        "label": "Decompile EA Scripts (Skip Existing)",
+        "type": "shell",
+        "command": "bash tools/decompile_skip_existing.sh",
+        "group": "build",
+        "presentation": {
+          "reveal": "always"
+        },
+        "problemMatcher": []
+      }
   ]
 }
