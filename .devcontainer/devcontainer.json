@@ -6,13 +6,18 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "python.envFile": "${workspaceFolder}/.env"
+        "python.envFile": "${workspaceFolder}/.env",
+        "terminal.integrated.defaultProfile.linux": "bash"
       },
       "extensions": [
-        "ms-python.python"
+        "ms-python.python",
+        "loic-pryv.automatic-terminal"
       ]
     }
   },
-  "workspaceFolder": "/workspaces",
-  "postCreateCommand": "pip install -r requirements.txt || true"
+  "remoteUser": "sims4fw",
+  "workspaceFolder": "/workspaces/s4fw",
+  "mounts": [
+    "source=/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay/,target=/workspaces/s4fw/ea_api,type=bind,consistency=cached"
+  ]
 }
