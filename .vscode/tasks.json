@@ -14,26 +14,15 @@
       },
       "problemMatcher": []
     },
-    {
-      "label": "Import EA Compiled Files",
+      {
+      "label": "Decompile EA Scripts (Skip Existing)",
       "type": "shell",
-      "command": "python tools/import_ea_zips.py",
+      "command": "bash tools/decompile_skip_existing.sh",
       "group": "build",
       "presentation": {
         "reveal": "always"
       },
       "problemMatcher": []
     }
-      ,
-      {
-        "label": "Decompile EA Scripts (Skip Existing)",
-        "type": "shell",
-        "command": "bash tools/decompile_skip_existing.sh",
-        "group": "build",
-        "presentation": {
-          "reveal": "always"
-        },
-        "problemMatcher": []
-      }
   ]
 }
