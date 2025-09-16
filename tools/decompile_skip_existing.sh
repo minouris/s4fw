@@ -2,6 +2,7 @@
 set -e
 set -o pipefail
 
+mkdir -p logs
 PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info[0]}.{sys.version_info[1]}')")
 FULL_PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}')")
 MAGIC_TABLE="\
@@ -17,7 +18,7 @@ MAGIC_TABLE="\
 
 log_event() {
     local msg="$1"
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $msg" >> "error-$(date +%Y-%m-%d).log"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $msg" >> "logs/error-$(date +%Y-%m-%d).log"
 }
 
 log_command_output() {
@@ -70,7 +71,7 @@ for zip in ea_api/*.zip; do
         if [ -s "$err_output" ]; then
             log_event "Error output detected for $pyc, retrying with --verify run and --asm for diagnostics"
             cat "$err_output" | log_command_output
-            uncompyle6 --verify run --verify syntax "$pyc" 2>&1 | log_command_output
+            uncompyle6 --verify run --asm "$pyc" 2>&1 | log_command_output
             pyc_ver_output=$(get_pyc_version "$pyc")
             pyc_ver=$(echo "$pyc_ver_output" | tail -n1)
             if [[ "$pyc_ver" == "unknown" ]]; then
@@ -84,4 +85,4 @@ for zip in ea_api/*.zip; do
     done
 done
 
-echo "Decompilation complete. See error-$(date +%Y-%m-%d).log for any errors."
+echo "Decompilation complete. See logs/error-$(date +%Y-%m-%d).log for any errors."
