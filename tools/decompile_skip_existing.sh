@@ -17,13 +17,17 @@ MAGIC_TABLE="\
 3060 3.0\n"
 
 log_event() {
-    local msg="$1"
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $msg" >> "logs/error-$(date +%Y-%m-%d).log"
+    local file="$1"
+    local msg="$2"
+    local fname=$(basename "$file")
+    echo "[$(date '+%Y-%m-%d %H:%M:%S') $fname] $msg" >> "logs/error-$(date +%Y-%m-%d).log"
 }
 
 log_command_output() {
+    local file="$1"
+    local fname=$(basename "$file")
     while IFS= read -r line; do
-        log_event "$line"
+        echo "[$(date '+%Y-%m-%d %H:%M:%S') $fname] $line" >> "logs/error-$(date +%Y-%m-%d).log"
     done
 }
 
@@ -52,33 +56,32 @@ get_pyc_version() {
 for zip in ea_api/*.zip; do
     name=$(basename "$zip" .zip)
     mkdir -p "ea_compiled/$name"
-    unzip -o "$zip" -d "ea_compiled/$name" || log_event "Failed to unzip $zip"
+    unzip -o "$zip" -d "ea_compiled/$name" || log_event "$zip" "Failed to unzip $zip"
     # Decompile all .pyc files in this folder
     find "ea_compiled/$name" -type f -name '*.pyc' | while read pyc; do
         outdir="lib/ea/$name"
         mkdir -p "$outdir"
         pyname=$(basename "$pyc" .pyc).py
         outfile="$outdir/$pyname"
+        err_output=$(mktemp)
         if [ -f "$outfile" ]; then
-            log_event "Skipping $pyc (already decompiled)"
             continue
         fi
-        # Capture stderr from uncompyle6
-        err_output=$(mktemp)
         if ! uncompyle6 -o "$outdir" "$pyc" 2> "$err_output"; then
-            log_event "Failed to decompile $pyc (nonzero exit code)"
+            log_event "$pyc" "Failed to decompile (nonzero exit code)"
         fi
         if [ -s "$err_output" ]; then
-            log_event "Error output detected for $pyc, retrying with --verify run and --asm for diagnostics"
-            cat "$err_output" | log_command_output
-            uncompyle6 --verify run --asm "$pyc" 2>&1 | log_command_output
+            log_event "$pyc" "Error output detected, retrying with --verify syntax and --verify run for diagnostics"
+            cat "$err_output" | log_command_output "$pyc"
+            uncompyle6 --verify syntax "$pyc" 2>&1 | log_command_output "$pyc"
+            uncompyle6 --verify run "$pyc" 2>&1 | log_command_output "$pyc"
             pyc_ver_output=$(get_pyc_version "$pyc")
             pyc_ver=$(echo "$pyc_ver_output" | tail -n1)
             if [[ "$pyc_ver" == "unknown" ]]; then
-                log_event "$pyc_ver_output"
+                log_event "$pyc" "$pyc_ver_output"
             elif [[ $(echo -e "$pyc_ver\n$PYTHON_VERSION" | sort -V | head -n1) != "$pyc_ver" ]]; then
-                log_event "$pyc_ver_output"
-                log_event "$pyc was compiled with Python $pyc_ver, which is newer than the current interpreter ($FULL_PYTHON_VERSION)"
+                log_event "$pyc" "$pyc_ver_output"
+                log_event "$pyc" "$pyc was compiled with Python $pyc_ver, which is newer than the current interpreter ($FULL_PYTHON_VERSION)"
             fi
         fi
         rm -f "$err_output"
