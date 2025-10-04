@@ -2,9 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Decompile EA Scripts",
+      "label": "Decompile EA Scripts (Resume)",
       "type": "shell",
-      "command": "bash tools/decompile.sh",
+      "command": "bash tools/decompile2.sh ea_compiled lib/ea",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -15,9 +15,19 @@
       "problemMatcher": []
     },
     {
-      "label": "Decompile EA Scripts (Skip Existing)",
+      "label": "Decompile EA Scripts (Clean)",
       "type": "shell",
-      "command": "bash tools/decompile_skip_existing.sh",
+      "command": "bash tools/decompile2.sh --clean ea_compiled lib/ea",
+      "group": "build",
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Decompile EA Scripts (With Trace)",
+      "type": "shell",
+      "command": "bash tools/decompile2.sh --trace ea_compiled lib/ea",
       "group": "build",
       "presentation": {
         "reveal": "always"
