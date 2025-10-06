@@ -14,11 +14,8 @@ Run the following command to unpack an EA API zip file (e.g., `sims4_api.zip`) i
 bash tools/unpack.sh
 ```
 
-<<<<<<< HEAD
-=======
-This must be done **BEFORE** decompiling!
+Must be done **BEFORE** decompiling!
 
->>>>>>> fb4da24 (Updated documentation)
 ## Decompiling EA Scripts (and Mods)
 
 You can decompile Sims 4 compiled Python files using the `decompile.sh` script or the provided VSCode tasks.
