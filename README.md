@@ -1,9 +1,23 @@
 # Sims 4 Modding Environment
 
+## Requirements
+
+- **WSL2** Windows Subsystem for Linux
+- **Docker** (with WSL2 integration if on Windows)
+- **Visual Studio Code** (with Remote - Containers extension)
+- **Python 3.7** (provided by the devcontainer)
+- **Git**
+- **The Sims 4** (installed on your system, for access to EA Python API files)
+- **(Optional) GitHub CLI** (`gh`) for command-line forking
+- **(Optional) unzip** for extracting the template zip
+
+## Structure
+
 - `src/`: Your mod code (to be included in releases)
-- `lib/external/`: External libraries from GitHub (for build/debug only, not for release)
+- `ea_api`: External mount (by Docker) of EA `Data/Simulation/Gameplay` folder for API zips
+- `lib/external/`: External python libraries (for build/debug only, not for release)
 - `lib/ea/`: Decompiled EA Python source (output from decompiling .pyc files)
-- `ea_compiled/`: Compiled Python files from EA
+- `ea_compiled/`: Compiled Python files from EA (unpacked by [tools/unpack.sh](tools/unpack.sh))
 - `tools/`: Decompiler tool(s) for Sims 4 .pyc files
 
 ## Devcontainer
@@ -11,7 +25,40 @@ This project uses a devcontainer with Python 3.7 for compatibility with Sims 4 s
 
 ## Setup Instructions
 
-1. **Unzip This Template**
+### Using This Repository as a Template
+
+You can quickly start a new Sims 4 modding project by using this repository as a GitHub template:
+
+1. **Create Your Own Repository**
+   - Click the green "Use this template" button on the [GitHub repository page](https://github.com/minouris/s4fw).
+   - Choose "Create a new repository" and fill in your desired repository name and settings.
+   - Clone your new repository to your local machine:
+     ```sh
+     git clone https://github.com/<your-username>/<your-repo-name>.git
+     cd <your-repo-name>
+     ```
+
+2. **Continue with Setup**
+   - Follow the steps below to configure Docker, the devcontainer, and the EA API mount.
+
+---
+
+### Alternative: Manual Setup
+
+If you do not wish to use the GitHub template feature, you can set up your project manually using one of the following methods:
+
+#### 1. Download and Unzip from GitHub
+
+   - Download a zip of this repository from the [GitHub page](https://github.com/minouris/s4fw) by clicking the green "Code" button and selecting "Download ZIP".
+   - Unzip the downloaded file into your desired project directory.
+   - Example:
+     ```sh
+     unzip s4fw-main.zip -d <your-new-project>
+     cd <your-new-project>
+     ```
+   - Replace `<your-new-project>` with your desired project folder name.
+
+#### 2. Unzip This Template
    - Unzip the provided zip file into your desired project directory.
    - Example:
      ```sh
@@ -20,8 +67,7 @@ This project uses a devcontainer with Python 3.7 for compatibility with Sims 4 s
      ```
    - Replace `<your-new-project>` with your desired project folder name.
 
-   **Alternatively, Fork on GitHub**
-   - If you prefer to start from the git repository, fork it to your own GitHub account. You can do this via the browser or the command line:
+#### 3. Fork on GitHub
 
    **Option 1: Using the Browser**
      1. Open the repository in your browser:
@@ -46,6 +92,8 @@ This project uses a devcontainer with Python 3.7 for compatibility with Sims 4 s
         - After forking, you can rename your repository on GitHub using the browser if desired.
         - If you don't have `gh` installed, use the browser method above.
 
+---
+
 2. **Install Docker in WSL**
    - Ensure Docker is installed and running inside your WSL environment. Follow the official Docker documentation for [Docker Desktop on WSL](https://docs.docker.com/desktop/wsl/) or install Docker Engine directly in your WSL distribution.
 
@@ -69,11 +117,39 @@ This project uses a devcontainer with Python 3.7 for compatibility with Sims 4 s
 
 6. **See `TOOLS.md` for Details**
    - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
-   - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
-5. **Unpack and Decompile EA API Files**
-   - Use the provided VSCode tasks (see `tasks.json`) or run the equivalent commands in the terminal:
-     - **Unpack API files:** Run the "Unpack EA API" task to extract the necessary files from the game directory into `ea_compiled/`.
-     - **Decompile:** Run the "Decompile EA API" task to convert `.pyc` files in `ea_compiled/` into Python source in `lib/ea/`.
 
-6. **See `TOOLS.md` for Details**
-   - For more detailed instructions for unpacking and decompiling, refer to [TOOLS.md](TOOLS.md).
+## Keeping Your Project Up to Date
+
+If you want to pull in updates from this template repository after you've started your own project, you can add the original repo as an "upstream" remote and merge changes:
+
+1. **Add Upstream Remote**
+   ```sh
+   git remote add upstream https://github.com/minouris/s4fw.git
+   ```
+
+2. **Fetch and Merge Updates**
+   ```sh
+   git fetch upstream
+   git merge upstream/main
+   ```
+   - Resolve any merge conflicts if prompted.
+   - Push the merged changes to your own repository:
+     ```sh
+     git push origin main
+     ```
+
+See [GitHub documentation on syncing forks](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork) for more details.
+
+## License
+
+See [LICENSE](LICENSE) for license information.
+
+## Attribution
+
+- Sims 4 and related assets are © Electronic Arts Inc. This project is not affiliated with or endorsed by Electronic Arts.
+- This project uses tools by third party authors - please see [ATTRIBUTION.md](ATTRIBUTION.md) for details.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a history of changes to this project.
+

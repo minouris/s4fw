@@ -1,4 +1,20 @@
+# Repository: https://github.com/minouris/s4fw
+#
+# Project: S4FW
+# Author: Ciara Norrish (@minouris)
+# License: MIT (see LICENSE.md)
+#
+# Description: Dev container for Sims 4 Framework development
+
 FROM python:3.7-slim
+
+# Install tzdata package for timezone support
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git unzip zip sudo build-essential cmake libboost-all-dev tzdata
+
+# Set fallback timezone (will be overridden by host mount if available)
+ENV TZ=UTC
+
 
 # Install any build dependencies here
 RUN apt-get update && apt-get install -y --no-install-recommends \

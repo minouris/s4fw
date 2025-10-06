@@ -14,7 +14,7 @@ Run the following command to unpack an EA API zip file (e.g., `sims4_api.zip`) i
 bash tools/unpack.sh
 ```
 
-This must be done **BEFORE** decompiling!
+Must be done **BEFORE** decompiling!
 
 ## Decompiling EA Scripts (and Mods)
 
