@@ -2,7 +2,17 @@
 
 This folder contains tools for working with Sims 4 compiled Python files.
 
+## Unpacking EA API Zip Files
 
+You can unpack the official EA API zip files using the `unpack.sh` script or the provided VSCode tasks.
+
+### Using the Command Line
+
+Run the following command to unpack an EA API zip file (e.g., `sims4_api.zip`) into the `lib/ea_api` directory:
+
+```sh
+bash tools/unpack.sh
+```
 
 ## Decompiling EA Scripts (and Mods)
 
@@ -42,6 +52,7 @@ Several VSCode tasks are available for decompiling:
 - **Decompile EA Scripts (Resume)**: Decompile without cleaning the output directory.
 - **Decompile EA Scripts (Clean)**: Clean the output directory before decompiling.
 - **Decompile EA Scripts (With Trace)**: Enable verbose tracing during decompilation.
+- **Unpack EA API Zips**: Unpack the EA API zip file into the target directory.
 
 To run a task:
 1. Open the Command Palette (`Ctrl+Shift+P`).
