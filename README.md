@@ -69,3 +69,17 @@ This project uses a devcontainer with Python 3.7 for compatibility with Sims 4 s
 
 6. **See `TOOLS.md` for Details**
    - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
+
+## License
+
+See [LICENSE](LICENSE) for license information.
+
+## Attribution
+
+- Sims 4 and related assets are © Electronic Arts Inc. This project is not affiliated with or endorsed by Electronic Arts.
+- Portions of the decompiled code and tools may be derived from EA's original work for modding purposes.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a history of changes to this project.
+

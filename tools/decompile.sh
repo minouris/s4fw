@@ -1,16 +1,19 @@
-#!/bin/bash
+# Repository: https://github.com/minouris/s4fw
+#
+# Project: S4FW
+# Author: Ciara Norrish (@minouris)
+# License: MIT (see LICENSE.md)
+#
+# Description: Decompile Python bytecode (.pyc) files to source code (.py) using multiple decompilers.
+#
+# Revision: GIT_COMMIT_HASH
 
+#!/bin/bash
 
 LOGDIR="logs"
 CLEAN=0
 TRACE=0
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-
-# TODO: Make sure params can be in any order
-#       e.g. decompile2.sh -c -l mylogs infolder outfolder
-# TODO: Add argument for passing in a file list of specific .pyc files to process
-# TODO: Add option for setting the base of the output folder (e.g. strip leading dirs from input path)
-
 OUTPUT_DIR=""
 INPUT_MODE=""
 INPUT_DIR=""
@@ -153,12 +156,6 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-
-#if [[ -z "$INPUT_MODE" && -z "$INPUT_DIR" && -z "$IN_FILE_LIST" ]]; then
-#    echo "Error: Must specify --input-dir or --in-file-list, or pipe in a list of files"
-#    echo "Use --help for usage information"
-#    exit 1
-#fi
 
 if [[ -z "$OUTPUT_DIR" ]]; then
     echo "Usage: $0 [--clean|-c] [--logdir=<dir>|-l <dir>] [--output-dir=<dir>|-o <dir>] [--base-path=<path>|-b <path>] [--input-dir <dir>|-d <dir>|--in-file-list <file>|-i <file>] [input_folder]"
@@ -313,6 +310,10 @@ for pyc_file in "${pyc_files[@]}"; do
     output_file="$output_folder/$base_name.py"
     if [[ ! -f "$output_file" ]]; then
         decompile_file "$pyc_file" "$output_folder" "$LOGFILE" "$ERRLOG"
+    fi
+done
+
+log_message "Decompilation completed at $(date +%Y-%m-%d_%H-%M-%S)" "$LOGFILE"
     fi
 done
 

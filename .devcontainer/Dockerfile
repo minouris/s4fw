@@ -1,4 +1,16 @@
+# Repository: https://github.com/minouris/s4fw
+#
+# Project: S4FW
+# Author: Ciara Norrish (@minouris)
+# License: MIT (see LICENSE.md)
+#
+# Description: Dev container for Sims 4 Framework development
+#
+# Revision: GIT_COMMIT_HASH
+
 FROM python:3.7-slim
+
+
 
 # Install any build dependencies here
 RUN apt-get update && apt-get install -y --no-install-recommends \
