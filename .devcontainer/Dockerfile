@@ -5,11 +5,15 @@
 # License: MIT (see LICENSE.md)
 #
 # Description: Dev container for Sims 4 Framework development
-#
-# Revision: GIT_COMMIT_HASH
 
 FROM python:3.7-slim
 
+# Install tzdata package for timezone support
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git unzip zip sudo build-essential cmake libboost-all-dev tzdata
+
+# Set fallback timezone (will be overridden by host mount if available)
+ENV TZ=UTC
 
 
 # Install any build dependencies here
