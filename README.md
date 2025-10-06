@@ -69,12 +69,3 @@ This project uses a devcontainer with Python 3.7 for compatibility with Sims 4 s
 
 6. **See `TOOLS.md` for Details**
    - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
-   - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
-5. **Unpack and Decompile EA API Files**
-   - Use the provided VSCode tasks (see `tasks.json`) or run the equivalent commands in the terminal:
-     - **Unpack API files:** Run the "Unpack EA API" task to extract the necessary files from the game directory into `ea_compiled/`.
-     - **Decompile:** Run the "Decompile EA API" task to convert `.pyc` files in `ea_compiled/` into Python source in `lib/ea/`.
-
-6. **See `TOOLS.md` for Details**
-   - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
-   - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
