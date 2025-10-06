@@ -4,7 +4,7 @@
     {
       "label": "Decompile EA Scripts (Resume)",
       "type": "shell",
-      "command": "bash tools/decompile2.sh ea_compiled lib/ea",
+      "command": "bash tools/decompile.sh --input-dir=ea_compiled --output-dir=lib/ea",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -17,7 +17,7 @@
     {
       "label": "Decompile EA Scripts (Clean)",
       "type": "shell",
-      "command": "bash tools/decompile2.sh --clean ea_compiled lib/ea",
+      "command": "bash tools/decompile.sh --input-dir=ea_compiled --output-dir=lib/ea --clean",
       "group": "build",
       "presentation": {
         "reveal": "always"
@@ -27,7 +27,17 @@
     {
       "label": "Decompile EA Scripts (With Trace)",
       "type": "shell",
-      "command": "bash tools/decompile2.sh --trace ea_compiled lib/ea",
+      "command": "bash tools/decompile.sh --input-dir=ea_compiled --output-dir=lib/ea --trace",
+      "group": "build",
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Unpack EA API Zips",
+      "type": "shell",
+      "command": "bash tools/unpack.sh",
       "group": "build",
       "presentation": {
         "reveal": "always"

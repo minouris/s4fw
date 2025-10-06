@@ -1,10 +1,18 @@
 FROM python:3.7-slim
 
 # Install any build dependencies here
-RUN apt-get update && apt-get install -y \
-    git unzip zip sudo \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git unzip zip sudo build-essential cmake libboost-all-dev 
 
+# Build and install pycdc
+RUN git clone https://github.com/zrax/pycdc.git /opt/pycdc \
+    && mkdir -p /opt/pycdc/build \
+    && cd /opt/pycdc/build \
+    && cmake -DCMAKE_BUILD_TYPE=Release .. \
+    && make -j"$(nproc)" \
+    && cp pycdc /usr/local/bin/pycdc \
+    && chmod +x /usr/local/bin/pycdc \
+    && rm -rf /opt/pycdc/build /opt/pycdc/.git
 
 # Install uncompypython decompilers for decompiling Sims 4 .pyc files
 RUN pip install uncompyle6

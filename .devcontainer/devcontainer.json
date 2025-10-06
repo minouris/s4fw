@@ -11,7 +11,9 @@
       },
       "extensions": [
         "ms-python.python",
-        "loic-pryv.automatic-terminal"
+        "loic-pryv.automatic-terminal",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy"
       ]
     }
   },
