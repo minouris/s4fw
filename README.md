@@ -1,9 +1,22 @@
 # Sims 4 Modding Environment
 
+## Requirements
+
+- **Docker** (with WSL2 integration if on Windows)
+- **Visual Studio Code** (with Remote - Containers extension)
+- **Python 3.7** (provided by the devcontainer)
+- **Git**
+- **The Sims 4** (installed on your system, for access to EA Python API files)
+- **(Optional) GitHub CLI** (`gh`) for command-line forking
+- **(Optional) unzip** for extracting the template zip
+
+## Structure
+
 - `src/`: Your mod code (to be included in releases)
-- `lib/external/`: External libraries from GitHub (for build/debug only, not for release)
+- `ea_api`: External mount (by Docker) of EA `Data/Simulation/Gameplay` folder for API zips
+- `lib/external/`: External python libraries (for build/debug only, not for release)
 - `lib/ea/`: Decompiled EA Python source (output from decompiling .pyc files)
-- `ea_compiled/`: Compiled Python files from EA
+- `ea_compiled/`: Compiled Python files from EA (unpacked by [tools/unpack.sh](tools/unpack.sh))
 - `tools/`: Decompiler tool(s) for Sims 4 .pyc files
 
 ## Devcontainer
@@ -77,7 +90,7 @@ See [LICENSE](LICENSE) for license information.
 ## Attribution
 
 - Sims 4 and related assets are © Electronic Arts Inc. This project is not affiliated with or endorsed by Electronic Arts.
-- Portions of the decompiled code and tools may be derived from EA's original work for modding purposes.
+- This project uses tools by third party authors - please see [ATTRIBUTION.md](ATTRIBUTION.md) for details.
 
 ## Changelog
 
