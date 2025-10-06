@@ -7,8 +7,6 @@
 # License: MIT (see LICENSE.md)
 #
 # Description: Unpack all .zip files in ea_api/ into corresponding subfolders in ea_compiled/
-#
-# Revision: GIT_COMMIT_HASH
 
 
 for zipfile in ea_api/*.zip; do
