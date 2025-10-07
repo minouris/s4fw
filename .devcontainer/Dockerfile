@@ -6,11 +6,32 @@
 #
 # Description: Dev container for Sims 4 Framework development
 
-FROM python:3.7-slim
+FROM ubuntu:20.04
 
-# Install all dependencies in one layer
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install build dependencies and system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git unzip zip sudo build-essential cmake libboost-all-dev tzdata jq
+    git unzip zip sudo build-essential cmake libboost-all-dev tzdata jq \
+    wget ca-certificates \
+    libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
+    libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
+# Build and install Python 3.7.0 from source
+RUN cd /tmp && \
+    wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz && \
+    tar xzf Python-3.7.0.tgz && \
+    cd Python-3.7.0 && \
+    ./configure --enable-optimizations --with-ensurepip=install && \
+    make -j"$(nproc)" && \
+    make altinstall && \
+    cd / && \
+    rm -rf /tmp/Python-3.7.0*
+
+# Create symlinks for python and pip
+RUN ln -s /usr/local/bin/python3.7 /usr/local/bin/python && \
+    ln -s /usr/local/bin/pip3.7 /usr/local/bin/pip
 
 # Set fallback timezone (will be overridden by host mount if available)
 ENV TZ=UTC
