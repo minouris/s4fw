@@ -111,6 +111,8 @@ If you do not wish to use the GitHub template feature, you can set up your proje
 4. **Open the Devcontainer**
    - Open the project in VSCode and reopen in the container.
 
+   **Note:** The first time you do this, and whenever you have to rebuild the container, it will take a long time, as it has to build Python 3.7.0 from scratch - it's required for The Sims 4 compatibility (newer versions don't work), but old enough that it's not in the APT repository anymore...
+
 5. **Unpack and Decompile EA API Files**
    - Use the provided VSCode tasks (see `tasks.json`) or run the equivalent commands in the terminal:
      - **Unpack API files:** Run the "Unpack EA API" task to extract the necessary files from the game directory into `ea_compiled/`.
