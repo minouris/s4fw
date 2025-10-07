@@ -13,6 +13,13 @@ set -e
 SRC_DIR="src"
 BUILD_DIR="build"
 
+# Parse arguments
+if [[ "$1" == "--clean" || "$1" == "-c" ]]; then
+    rm -rf "$BUILD_DIR/*"
+    echo "Build directory cleaned"
+    exit 0
+fi
+
 # Check if src directory exists
 if [[ ! -d "$SRC_DIR" ]]; then
     echo "ERROR: Source directory '$SRC_DIR' not found"
@@ -41,6 +48,9 @@ find "$SRC_DIR" -name "*.py" -type f | while read py_file; do
 
         # Compute relative path from SRC_DIR
         rel_dir="${py_dir#$SRC_DIR/}"
+        if [[ "$py_dir" == "$SRC_DIR" ]]; then
+            rel_dir=""
+        fi
         build_target_dir="$BUILD_DIR/$rel_dir"
         mkdir -p "$build_target_dir"
         mv "$target_pyc" "$build_target_dir/"

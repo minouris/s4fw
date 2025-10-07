@@ -314,8 +314,4 @@ for pyc_file in "${pyc_files[@]}"; do
 done
 
 log_message "Decompilation completed at $(date +%Y-%m-%d_%H-%M-%S)" "$LOGFILE"
-    fi
-done
-
-log_message "Decompilation completed at $(date +%Y-%m-%d_%H-%M-%S)" "$LOGFILE"
 
