@@ -8,17 +8,12 @@
 
 FROM python:3.7-slim
 
-# Install tzdata package for timezone support
+# Install all dependencies in one layer
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git unzip zip sudo build-essential cmake libboost-all-dev tzdata
+    git unzip zip sudo build-essential cmake libboost-all-dev tzdata jq
 
 # Set fallback timezone (will be overridden by host mount if available)
 ENV TZ=UTC
-
-
-# Install any build dependencies here
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git unzip zip sudo build-essential cmake libboost-all-dev 
 
 # Build and install pycdc
 RUN git clone https://github.com/zrax/pycdc.git /opt/pycdc \
@@ -31,8 +26,7 @@ RUN git clone https://github.com/zrax/pycdc.git /opt/pycdc \
     && rm -rf /opt/pycdc/build /opt/pycdc/.git
 
 # Install uncompypython decompilers for decompiling Sims 4 .pyc files
-RUN pip install uncompyle6
-RUN pip install decompyle3
+RUN pip install uncompyle6 decompyle3
 RUN git clone https://github.com/andrews4s/unpyc37.git /opt/unpyc37
 
 # Create a non-root user 'sims4fw' with home directory

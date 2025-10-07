@@ -20,7 +20,8 @@
   "remoteUser": "sims4fw",
   "workspaceFolder": "/workspaces/s4fw",
   "mounts": [
-    "source=/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay/,target=/workspaces/s4fw/ea_api,type=bind,consistency=cached",
+	"source=__SIMS4_EA_ZIPS_PATH__,target=/workspaces/s4fw/ea_api,type=bind,readonly",
+	"source=__SIMS4_MODS_PATH__,target=/workspaces/s4fw/mods,type=bind",
     "source=/etc/timezone,target=/etc/timezone,type=bind,readonly",
     "source=/etc/localtime,target=/etc/localtime,type=bind,readonly"
   ]

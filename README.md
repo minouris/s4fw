@@ -97,15 +97,16 @@ If you do not wish to use the GitHub template feature, you can set up your proje
 2. **Install Docker in WSL**
    - Ensure Docker is installed and running inside your WSL environment. Follow the official Docker documentation for [Docker Desktop on WSL](https://docs.docker.com/desktop/wsl/) or install Docker Engine directly in your WSL distribution.
 
-3. **Edit Devcontainer Volume Mount**
-   - Before opening the container, edit your devcontainer configuration ([.devcontainer/devcontainer.json](`.devcontainer/devcontainer.json`)) to edit the volume mount for the EA Python API zips.
-   - Example:
-     ```json
-     "mounts": [
-       "source=/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay/,target=/workspaces/s4fw/ea_api,type=bind,consistency=cached"
-     ]
+3. **Run Setup Script**
+   - Before opening the container, run the setup script to configure the devcontainer and volume mount for the EA Python API zips:
+     ```sh
+     ./setup/setup.sh
      ```
-   - Adjust the `source` path to match the location where the EA API zips live on your system. **MUST** be a unix path - do not use `C:\Program Files\EA Games\...`
+   - The script will prompt you for:
+     - The drive letter where your **Documents** folder is located (e.g., `c`, `d`, `e`)
+     - Your Sims 4 **game launcher** (EA App, Origin, Steam, Epic Games, or Other)
+     - The drive letter or path where your **game installation** is located (if not detected automatically)
+   - It will update the devcontainer configuration with the correct paths for your system.
 
 4. **Open the Devcontainer**
    - Open the project in VSCode and reopen in the container.
