@@ -119,6 +119,62 @@ If you do not wish to use the GitHub template feature, you can set up your proje
 6. **See `TOOLS.md` for Details**
    - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
 
+## Quick Start: Building Your First Mod
+
+Once you have your development environment set up, here's how to build and test your mod:
+
+### 1. Write Your Mod Code
+Place your Python mod files in the `src/` directory. The build system will compile them automatically.
+
+### 2. Update Mod Information
+Edit `mod_info.json` with your mod's details:
+```json
+{
+    "name": "MyAwesomeMod",
+    "author": "YourName",
+    "version": "1.0.0",
+    "description": "Description of what your mod does",
+    "gameversion": "1.116.240.1020"
+}
+```
+
+### 3. Build, Package, and Deploy
+#### Using VSCode (Recommended)
+1. Press `Ctrl+Shift+P` to open Command Palette
+2. Type "Tasks: Run Task" and select it
+3. Choose "Build + Package + Deploy" for the complete workflow
+
+#### Using Command Line
+```bash
+# Compile your mod
+bash tools/build.sh
+
+# Package into .ts4script file
+bash tools/package.sh
+
+# Deploy to Mods folder for testing
+bash tools/deploy.sh
+```
+
+### 4. Test Your Mod
+Launch The Sims 4 and test your mod. Your packaged mod will be in the Mods folder.
+
+### 5. Remove for Updates
+When you want to update your mod:
+```bash
+# Remove old version from Mods folder
+bash tools/undeploy.sh
+
+# Make your changes, then rebuild and redeploy
+bash tools/build.sh && bash tools/package.sh && bash tools/deploy.sh
+```
+
+The build system automatically handles:
+- ✅ Clean Python compilation (avoids conflicts with decompiled EA files)
+- ✅ Proper folder structure preservation
+- ✅ Automatic packaging with correct naming
+- ✅ Easy deployment to your Mods folder
+
 ## Keeping Your Project Up to Date
 
 If you want to pull in updates from this template repository after you've started your own project, you can add the original repo as an "upstream" remote and merge changes:
@@ -133,11 +189,11 @@ If you want to pull in updates from this template repository after you've starte
    git fetch upstream
    git merge upstream/main
    ```
-   - Resolve any merge conflicts if prompted.
-   - Push the merged changes to your own repository:
-     ```sh
-     git push origin main
-     ```
+- Resolve any merge conflicts if prompted.
+- Push the merged changes to your own repository:
+   ```sh
+   git push origin main
+   ```
 
 See [GitHub documentation on syncing forks](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork) for more details.
 

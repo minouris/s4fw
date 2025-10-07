@@ -5,6 +5,8 @@
 # License: MIT (see LICENSE.md)
 #
 # Description: Decompile Python bytecode (.pyc) files to source code (.py) using multiple decompilers.
+#
+# Revision: GIT_COMMIT_HASH
 
 #!/bin/bash
 
@@ -20,7 +22,7 @@ BASE_PATH=""
 
 show_usage() {
     cat << 'EOF'
-Usage: decompile.sh [OPTIONS] --output-dir <dir> {--input-dir <dir>|--in-file-list <file>}
+Usage: decompile2.sh [OPTIONS] --output-dir <dir> {--input-dir <dir>|--in-file-list <file>}
 
 Decompile Python bytecode (.pyc) files to source code (.py) using multiple decompilers.
 
@@ -36,16 +38,16 @@ OPTIONS:
 
 EXAMPLES:
     # Decompile all .pyc files in ea_compiled to lib/ea
-    decompile.sh --input-dir ea_compiled --output-dir lib/ea
+    decompile2.sh --input-dir ea_compiled --output-dir lib/ea
 
     # Clean output and decompile with trace logging
-    decompile.sh -c -t --input-dir ea_compiled --output-dir lib/ea
+    decompile2.sh -c -t --input-dir ea_compiled --output-dir lib/ea
 
     # Process specific files from a list
-    decompile.sh --in-file-list failed_files.txt --output-dir lib/ea
+    decompile2.sh --in-file-list failed_files.txt --output-dir lib/ea
 
     # Use custom log directory
-    decompile.sh --logdir my_logs --input-dir ea_compiled --output-dir lib/ea
+    decompile2.sh --logdir my_logs --input-dir ea_compiled --output-dir lib/ea
 
     # Use base path stripping for file list mode
     # Example: you have the following .pyc files in files.txt:
@@ -53,12 +55,12 @@ EXAMPLES:
     #   ea_compiled/foo/qux.pyc
     #
     # Run:
-    #   decompile.sh --in-file-list files.txt --output-dir /tmp/lib/ea --base-path ea_compiled
+    #   decompile2.sh --in-file-list files.txt --output-dir /tmp/lib/ea --base-path ea_compiled
     #
     # Output:
     #   lib/ea/foo/bar/baz.py
     #   lib/ea/foo/qux.py
-    decompile.sh --in-file-list failed_files.txt --base-path ea_compiled --output-dir lib/ea
+    decompile2.sh --in-file-list failed_files.txt --base-path ea_compiled --output-dir lib/ea
 
 CONCRETE INPUT/OUTPUT EXAMPLE:
 
@@ -312,3 +314,8 @@ for pyc_file in "${pyc_files[@]}"; do
 done
 
 log_message "Decompilation completed at $(date +%Y-%m-%d_%H-%M-%S)" "$LOGFILE"
+    fi
+done
+
+log_message "Decompilation completed at $(date +%Y-%m-%d_%H-%M-%S)" "$LOGFILE"
+

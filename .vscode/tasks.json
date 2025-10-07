@@ -43,6 +43,58 @@
         "reveal": "always"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Build Mod",
+      "type": "shell",
+      "command": "bash tools/build.sh",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Package Mod",
+      "type": "shell",
+      "command": "bash tools/package.sh",
+      "group": "build",
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Deploy Mod",
+      "type": "shell",
+      "command": "bash tools/deploy.sh",
+      "group": "build",
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Undeploy Mod",
+      "type": "shell",
+      "command": "bash tools/undeploy.sh",
+      "group": "build",
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build + Package + Deploy",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Build Mod", "Package Mod", "Deploy Mod"],
+      "group": "build",
+      "presentation": {
+        "reveal": "always"
+      }
     }
   ]
 }

@@ -63,4 +63,69 @@ To run a task:
 
 These tasks are defined in `.vscode/tasks.json` and use the `decompile.sh` script under the hood.
 
+## Building and Packaging Your Mod
+
+### Building Your Mod
+
+You can compile your Python mod files using the `build.sh` script or the provided VSCode tasks.
+
+#### Using the Command Line
+
+```sh
+bash tools/build.sh
+```
+
+This script:
+- Compiles all `.py` files in the `src/` directory using a clean Python environment
+- Avoids import conflicts with decompiled EA files
+- Places compiled `.pyc` files in the `build/` directory with proper folder structure
+- Strips version suffixes from compiled files for cleaner distribution
+
+#### Using VSCode Tasks
+
+- **Build Mod**: Compile all Python files (default build task - `Ctrl+Shift+P` → `Tasks: Run Build Task`)
+
+### Packaging Your Mod
+
+```sh
+bash tools/package.sh
+```
+
+This script:
+- Creates a `.ts4script` file from compiled `.pyc` files in `build/`
+- Names the file using format: `<author>-<name>-<version>.ts4script`
+- Reads mod information from `mod_info.json`
+- Places the package in the `dist/` directory
+
+### Deploying Your Mod
+
+```sh
+bash tools/deploy.sh
+```
+
+This copies your packaged mod to the Sims 4 Mods folder for testing.
+
+### Undeploying Your Mod
+
+```sh
+bash tools/undeploy.sh
+```
+
+This removes your mod from the Sims 4 Mods folder.
+
+### VSCode Build Tasks
+
+Several VSCode tasks are available for mod development:
+
+- **Build Mod**: Compile Python files (default)
+- **Package Mod**: Create .ts4script package
+- **Deploy Mod**: Copy package to Mods folder
+- **Undeploy Mod**: Remove package from Mods folder
+- **Build + Package + Deploy**: Complete workflow in sequence
+
+To run a task:
+1. Open the Command Palette (`Ctrl+Shift+P`)
+2. Select `Tasks: Run Task`
+3. Choose the desired task
+
 
