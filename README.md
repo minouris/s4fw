@@ -49,133 +49,72 @@ If you do not wish to use the GitHub template feature, you can set up your proje
 
 #### 1. Download and Unzip from GitHub
 
-   - Download a zip of this repository from the [GitHub page](https://github.com/minouris/s4fw) by clicking the green "Code" button and selecting "Download ZIP".
-   - Unzip the downloaded file into your desired project directory.
-   - Example:
-     ```sh
-     unzip s4fw-main.zip -d <your-new-project>
-     cd <your-new-project>
-     ```
-   - Replace `<your-new-project>` with your desired project folder name.
+1. Download a zip of this repository from the [GitHub page](https://github.com/minouris/s4fw) by clicking the green "Code" button and selecting "Download ZIP".
+2. Unzip the downloaded file into your desired project directory.
+3. Example:
+  ```sh
+  unzip s4fw-main.zip -d <your-new-project>
+  cd <your-new-project>
+  ```
+4. Replace `<your-new-project>` with your desired project folder name.
 
-#### 2. Unzip This Template
-   - Unzip the provided zip file into your desired project directory.
-   - Example:
-     ```sh
-     unzip s4fw.zip -d <your-new-project>
-     cd <your-new-project>
-     ```
-   - Replace `<your-new-project>` with your desired project folder name.
+#### 2. Fork on GitHub
 
-#### 3. Fork on GitHub
+**Option 1: Using the Browser**
 
-   **Option 1: Using the Browser**
-     1. Open the repository in your browser:
-        ```sh
-        $BROWSER https://github.com/minouris/s4fw.git
-        ```
-     2. Click the "Fork" button in the top-right corner of the GitHub page.
-     3. **(Optional)** After forking, you can rename your forked repository on GitHub to anything you like (e.g., your mod's name) via the repository "Settings" page.
-     4. Copy the URL of your fork (e.g., `https://github.com/<your-username>/<your-repo-name>.git`).
-     5. Clone your fork:
-        ```sh
-        git clone https://github.com/<your-username>/<your-repo-name>.git <your-new-project>
-        cd <your-new-project>
-        ```
+1. Open the repository in your browser:
+   ```sh
+   $BROWSER https://github.com/minouris/s4fw.git
+   ```
+2. Click the "Fork" button in the top-right corner of the GitHub page.
 
-   **Option 2: Command Line Only**
-     1. If you have the [GitHub CLI](https://cli.github.com/) installed, you can fork and clone in one step:
-        ```sh
-        gh repo fork minouris/s4fw --clone <your-new-project>
-        cd <your-new-project>
-        ```
-        - After forking, you can rename your repository on GitHub using the browser if desired.
-        - If you don't have `gh` installed, use the browser method above.
+3. **(Optional)** After forking, you can rename your forked repository on GitHub to anything you like (e.g., your mod's name) via the repository "Settings" page.
+
+4. Copy the URL of your fork (e.g., `https://github.com/<your-username>/<your-repo-name>.git`).
+
+5. Clone your fork:
+   ```sh
+   git clone https://github.com/<your-username>/<your-repo-name>.git <your-new-project>
+   cd <your-new-project>
+   ```
+
+**Option 2: Command Line Only**
+
+1. If you have the [GitHub CLI](https://cli.github.com/) installed, you can fork and clone in one step:
+   ```sh
+   gh repo fork minouris/s4fw --clone <your-new-project>
+   cd <your-new-project>
+   ```
+   - After forking, you can rename your repository on GitHub using the browser if desired.
+   - If you don't have `gh` installed, use the browser method above.
 
 ---
 
-2. **Install Docker in WSL**
+### Complete the Setup
+
+1. **Install Docker in WSL**
    - Ensure Docker is installed and running inside your WSL environment. Follow the official Docker documentation for [Docker Desktop on WSL](https://docs.docker.com/desktop/wsl/) or install Docker Engine directly in your WSL distribution.
 
-3. **Run Setup Script**
-   - Before opening the container, run the setup script to configure the devcontainer and volume mount for the EA Python API zips:
-     ```sh
-     ./setup/setup.sh
+2. **Edit Devcontainer Volume Mount**
+   - Before opening the container, edit your devcontainer configuration ([.devcontainer/devcontainer.json](`.devcontainer/devcontainer.json`)) to edit the volume mount for the EA Python API zips.
+   - Example:
+     ```json
+     "mounts": [
+       "source=/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay/,target=/workspaces/s4fw/ea_api,type=bind,consistency=cached"
+     ]
      ```
-   - The script will prompt you for:
-     - The drive letter where your **Documents** folder is located (e.g., `c`, `d`, `e`)
-     - Your Sims 4 **game launcher** (EA App, Origin, Steam, Epic Games, or Other)
-     - The drive letter or path where your **game installation** is located (if not detected automatically)
-   - It will update the devcontainer configuration with the correct paths for your system.
+   - Adjust the `source` path to match the location where the EA API zips live on your system. **MUST** be a unix path - do not use `C:\Program Files\EA Games\...`
 
-4. **Open the Devcontainer**
+3. **Open the Devcontainer**
    - Open the project in VSCode and reopen in the container.
 
-   **Note:** The first time you do this, and whenever you have to rebuild the container, it will take a long time, as it has to build Python 3.7.0 from scratch - it's required for The Sims 4 compatibility (newer versions don't work), but old enough that it's not in the APT repository anymore...
-
-5. **Unpack and Decompile EA API Files**
+4. **Unpack and Decompile EA API Files**
    - Use the provided VSCode tasks (see `tasks.json`) or run the equivalent commands in the terminal:
      - **Unpack API files:** Run the "Unpack EA API" task to extract the necessary files from the game directory into `ea_compiled/`.
      - **Decompile:** Run the "Decompile EA API" task to convert `.pyc` files in `ea_compiled/` into Python source in `lib/ea/`.
 
-6. **See `TOOLS.md` for Details**
+5. **See `TOOLS.md` for Details**
    - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
-
-## Quick Start: Building Your First Mod
-
-Once you have your development environment set up, here's how to build and test your mod:
-
-### 1. Write Your Mod Code
-Place your Python mod files in the `src/` directory. The build system will compile them automatically.
-
-### 2. Update Mod Information
-Edit `mod_info.json` with your mod's details:
-```json
-{
-    "name": "MyAwesomeMod",
-    "author": "YourName",
-    "version": "1.0.0",
-    "description": "Description of what your mod does",
-    "gameversion": "1.116.240.1020"
-}
-```
-
-### 3. Build, Package, and Deploy
-#### Using VSCode (Recommended)
-1. Press `Ctrl+Shift+P` to open Command Palette
-2. Type "Tasks: Run Task" and select it
-3. Choose "Build + Package + Deploy" for the complete workflow
-
-#### Using Command Line
-```bash
-# Compile your mod
-bash tools/build.sh
-
-# Package into .ts4script file
-bash tools/package.sh
-
-# Deploy to Mods folder for testing
-bash tools/deploy.sh
-```
-
-### 4. Test Your Mod
-Launch The Sims 4 and test your mod. Your packaged mod will be in the Mods folder.
-
-### 5. Remove for Updates
-When you want to update your mod:
-```bash
-# Remove old version from Mods folder
-bash tools/undeploy.sh
-
-# Make your changes, then rebuild and redeploy
-bash tools/build.sh && bash tools/package.sh && bash tools/deploy.sh
-```
-
-The build system automatically handles:
-- ✅ Clean Python compilation (avoids conflicts with decompiled EA files)
-- ✅ Proper folder structure preservation
-- ✅ Automatic packaging with correct naming
-- ✅ Easy deployment to your Mods folder
 
 ## Keeping Your Project Up to Date
 
@@ -191,11 +130,11 @@ If you want to pull in updates from this template repository after you've starte
    git fetch upstream
    git merge upstream/main
    ```
-- Resolve any merge conflicts if prompted.
-- Push the merged changes to your own repository:
-   ```sh
-   git push origin main
-   ```
+   - Resolve any merge conflicts if prompted.
+   - Push the merged changes to your own repository:
+     ```sh
+     git push origin main
+     ```
 
 See [GitHub documentation on syncing forks](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork) for more details.
 
