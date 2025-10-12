@@ -98,15 +98,11 @@ If you do not wish to use the GitHub template feature, you can set up your proje
 
 ### Complete the Setup
 
-#### 1. Install Docker
+#### 1. Install Prerequisites
 
-- **On WSL2 (Windows):**
-  - Ensure Docker is installed and running inside your WSL environment. Follow the official Docker documentation for [Docker Desktop on WSL](https://docs.docker.com/desktop/wsl/) or install Docker Engine directly in your WSL distribution.
+- **[See detailed instructions for installing VSCode and Docker on Linux and WSL in `doc/REQUIREMENTS.md`](doc/REQUIREMENTS.md)**
 
-- **On Linux (Native):**
-  - Install Docker using your distribution's package manager or follow the [official Docker Engine instructions](https://docs.docker.com/engine/install/).
-
-#### 2. Configure Devcontainer and EA API Mount
+#### 3. Configure Devcontainer and EA API Mount
 
 You can use the provided setup scripts to automatically configure your environment, or edit the configuration manually.
 
@@ -146,6 +142,7 @@ You can use the provided setup scripts to automatically configure your environme
   - Adjust the `source` path to match the location where the EA API zips live on your system. **MUST** be a unix path - do not use `C:\Program Files\EA Games\...`
 
 - **On Linux (Steam/Proton):**
+
   1. **Locate The Sims 4 Game Files**
      - The Sims 4 is typically installed under your Steam library, e.g.:
        ```
