@@ -2,18 +2,24 @@
 
 ## Requirements
 
-- **WSL2** Windows Subsystem for Linux
+- **WSL2** Windows Subsystem for Linux *(if on Windows)*
 - **Docker** (with WSL2 integration if on Windows)
 - **Visual Studio Code** (with Remote - Containers extension)
 - **Python 3.7** (provided by the devcontainer)
 - **Git**
 - **The Sims 4** (installed on your system, for access to EA Python API files)
+  - On **Linux**: Supported via **Steam** and/or **Proton** (see setup instructions below)
 - **(Optional) GitHub CLI** (`gh`) for command-line forking
 - **(Optional) unzip** for extracting the template zip
+
+---
 
 ## Structure
 
 - `src/`: Your mod code (to be included in releases)
+- `build/`: The location that compiled code is built to when the `Build Mod` task is run
+- `dist/`: The location that `.ts4script` are written to when the `Package Mod` task is run
+- `mods/`: Mods run by Sims 4, and where packages are copied to by the `Deploy Mod` task
 - `ea_api`: External mount (by Docker) of EA `Data/Simulation/Gameplay` folder for API zips
 - `lib/external/`: External python libraries (for build/debug only, not for release)
 - `lib/ea/`: Decompiled EA Python source (output from decompiling .pyc files)
@@ -92,29 +98,122 @@ If you do not wish to use the GitHub template feature, you can set up your proje
 
 ### Complete the Setup
 
-1. **Install Docker in WSL**
-   - Ensure Docker is installed and running inside your WSL environment. Follow the official Docker documentation for [Docker Desktop on WSL](https://docs.docker.com/desktop/wsl/) or install Docker Engine directly in your WSL distribution.
+#### 1. Install Docker
 
-2. **Edit Devcontainer Volume Mount**
-   - Before opening the container, edit your devcontainer configuration ([.devcontainer/devcontainer.json](`.devcontainer/devcontainer.json`)) to edit the volume mount for the EA Python API zips.
-   - Example:
-     ```json
-     "mounts": [
-       "source=/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay/,target=/workspaces/s4fw/ea_api,type=bind,consistency=cached"
-     ]
-     ```
-   - Adjust the `source` path to match the location where the EA API zips live on your system. **MUST** be a unix path - do not use `C:\Program Files\EA Games\...`
+- **On WSL2 (Windows):**
+  - Ensure Docker is installed and running inside your WSL environment. Follow the official Docker documentation for [Docker Desktop on WSL](https://docs.docker.com/desktop/wsl/) or install Docker Engine directly in your WSL distribution.
 
-3. **Open the Devcontainer**
-   - Open the project in VSCode and reopen in the container.
+- **On Linux (Native):**
+  - Install Docker using your distribution's package manager or follow the [official Docker Engine instructions](https://docs.docker.com/engine/install/).
 
-4. **Unpack and Decompile EA API Files**
-   - Use the provided VSCode tasks (see `tasks.json`) or run the equivalent commands in the terminal:
-     - **Unpack API files:** Run the "Unpack EA API" task to extract the necessary files from the game directory into `ea_compiled/`.
-     - **Decompile:** Run the "Decompile EA API" task to convert `.pyc` files in `ea_compiled/` into Python source in `lib/ea/`.
+#### 2. Configure Devcontainer and EA API Mount
 
-5. **See `TOOLS.md` for Details**
-   - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
+You can use the provided setup scripts to automatically configure your environment, or edit the configuration manually.
+
+**Recommended: Use the Setup Scripts**
+
+- **On WSL2 (Windows):**
+  - Use the setup script to detect your Sims 4 installation and patch your devcontainer:
+    ```sh
+    setup/setup.sh
+    ```
+    This script will:
+    - Attempt to automatically locate your Sims 4 installation directory on Windows
+    - Update your `.devcontainer/devcontainer.json` to mount the correct EA API folder into the devcontainer
+    - Prompt you to enter or confirm mod metadata (such as mod name, author, and description)
+    - Create or update your `mod_info.json` file with the provided information
+
+- **On Linux (Steam/Proton):**
+  - Use the setup script to detect your Sims 4 installation and patch your devcontainer:
+    ```sh
+    setup/setup_linux_proton.sh
+    ```
+    This script will:
+    - Attempt to automatically locate your Sims 4 installation directory under your Steam library (including Proton prefixes if used)
+    - Update your `.devcontainer/devcontainer.json` to mount the correct EA API folder into the devcontainer
+    - Prompt you to enter or confirm mod metadata (such as mod name, author, and description)
+    - Create or update your `mod_info.json` file with the provided information
+
+**Manual Setup (Alternative):**
+
+- **On WSL2 (Windows):**
+  - Edit your devcontainer configuration ([.devcontainer/devcontainer.json]) to add a mount for the EA Python API zips:
+    ```json
+    "mounts": [
+      "source=/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay/,target=/workspaces/s4fw/ea_api,type=bind,consistency=cached"
+    ]
+    ```
+  - Adjust the `source` path to match the location where the EA API zips live on your system. **MUST** be a unix path - do not use `C:\Program Files\EA Games\...`
+
+- **On Linux (Steam/Proton):**
+  1. **Locate The Sims 4 Game Files**
+     - The Sims 4 is typically installed under your Steam library, e.g.:
+       ```
+       ~/.steam/steam/steamapps/common/The Sims 4/
+       ```
+     - The EA Python API zips are found in:
+       ```
+       ~/.steam/steam/steamapps/common/The Sims 4/Data/Simulation/Gameplay/
+       ```
+     - Adjust the path as needed if your Steam library is elsewhere.
+
+  2. **Devcontainer Volume Mount**
+     - Edit your devcontainer configuration to add a mount for the EA API zips:
+       ```json
+       "mounts": [
+         "source=/home/<your-username>/.steam/steam/steamapps/common/The Sims 4/Data/Simulation/Gameplay/,target=/workspaces/s4fw/ea_api,type=bind,consistency=cached"
+       ]
+       ```
+     - Replace `<your-username>` with your Linux username.
+
+  3. **Proton Prefix Caveat**
+     - If you use a custom Steam library or Proton prefix, adjust the path accordingly.
+
+#### 3. Open the Devcontainer
+
+- Open the project in VSCode and reopen in the container.
+
+#### 4. Unpack and Decompile EA API Files
+
+You can use the provided VSCode tasks to automate unpacking and decompiling, or run the equivalent commands manually in the terminal.
+
+**To run VSCode tasks:**
+- Open the Command Palette (`Ctrl+Shift+P` or `F1`).
+- Type and select `Tasks: Run Task`.
+- Choose one of the following tasks:
+  - **Unpack EA API**: Extracts the necessary `.pyc` files from the EA API zips in `ea_api/` into the `ea_compiled/` directory.
+  - **Decompile EA API (Clean)**: Decompiles `.pyc` files from `ea_compiled/` into Python source files in `lib/ea/`.
+
+**To run these steps manually:**
+
+- **Unpack API files:**
+  ```sh
+  ./tools/unpack.sh
+  ```
+  This script extracts the required `.pyc` files from the EA API zips into `ea_compiled/`.
+
+- **Decompile API files:**
+  ```sh
+  ./tools/decompile.sh --input-dir=ea_compiled --output-dir=lib/ea --clean
+  ```
+  This script decompiles the `.pyc` files in `ea_compiled/` and writes the resulting `.py` files to `lib/ea/`.
+
+You can also inspect or modify the available tasks in `.vscode/tasks.json`.
+
+### Additional Decompile Tasks
+
+- **Decompile EA Scripts (Resume):**  
+  Runs `tools/decompile.sh` to decompile `.pyc` files from `ea_compiled/` to `lib/ea/` without cleaning the output directory first. Useful for resuming or incremental decompilation.
+
+- **Decompile EA Scripts (Clean):**  
+  Runs `tools/decompile.sh` with `--clean` to remove existing files in `lib/ea/` before decompiling. Ensures a fresh decompile.
+
+- **Decompile EA Scripts (With Trace):**  
+  Runs `tools/decompile.sh` with `--trace` for verbose output during decompilation. Useful for debugging decompilation issues.
+
+### See `TOOLS.md` for Details
+
+For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
 
 ## Keeping Your Project Up to Date
 
