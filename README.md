@@ -109,31 +109,80 @@ You can use the provided setup scripts to automatically configure your environme
 **Recommended: Use the Setup Scripts**
 
 - **On WSL2 (Windows):**
-  - Use the setup script to detect your Sims 4 installation and patch your devcontainer:
+  - Use the setup script to detect your Sims 4 installation and create your devcontainer:
     ```sh
     setup/setup.sh
     ```
     This script will:
     - Attempt to automatically locate your Sims 4 installation directory on Windows
-    - Update your `.devcontainer/devcontainer.json` to mount the correct EA API folder into the devcontainer
+    - Create or Update your `.devcontainer/devcontainer.json` to mount the correct EA API folder into the devcontainer
+    - Create or Update your `.devcontainer/Dockerfile` to create a Python3.7 container
     - Prompt you to enter or confirm mod metadata (such as mod name, author, and description)
     - Create or update your `mod_info.json` file with the provided information
 
 - **On Linux (Steam/Proton):**
-  - Use the setup script to detect your Sims 4 installation and patch your devcontainer:
+  - Use the setup script to detect your Sims 4 installation and create your devcontainer:
     ```sh
     setup/setup_linux_proton.sh
     ```
     This script will:
     - Attempt to automatically locate your Sims 4 installation directory under your Steam library (including Proton prefixes if used)
-    - Update your `.devcontainer/devcontainer.json` to mount the correct EA API folder into the devcontainer
+    - Create or Update your `.devcontainer/devcontainer.json` to mount the correct EA API folder into the devcontainer
+    - Create or Update your `.devcontainer/Dockerfile` to create a Python3.7 container
     - Prompt you to enter or confirm mod metadata (such as mod name, author, and description)
     - Create or update your `mod_info.json` file with the provided information
 
 **Manual Setup (Alternative):**
 
+- **On All Platforms**
+  - Copy `setup/.templates/mod_info.json` to the project root:
+
+    ```bash
+    $ cp -rf setup/.templates/mod_info.json ./ 
+    ```
+
+    It should look like this:
+
+    ```json
+    {
+        "name": "__MOD_NAME__",
+        "author": "__MOD_AUTHOR__",
+        "version": "0.0.1-SNAPSHOT",
+        "description": "",
+        "gameversion": "__GAME_VERSION__",
+        "depends": []
+    }
+    ```
+  - Set up the values in `mod_info.json`:
+    - Replace `__MOD_NAME__` in `mod_info.json` with your mod's name (avoid spaces, use dots instead)
+    - Replace `__AUTHOR_NAME__` in `mod_info.json` with your name (avoid spaces, use dots instead)
+    - Replace `__GAME_VERSION__` in `mod_info.json` with the current version of your game, e.g., `1.118.257.1020`
+    - Enter a `description` and adjust the `version` if you like
+
+    It should now look similar to this:
+
+    ```json
+    {
+        "name": "find.the.ultimate.question",
+        "author": "arthur.phillip.dent",
+        "version": "0.0.1-SNAPSHOT",
+        "description": "Find the question that yields the answer to thea meaning of life, the universe, and everything, which is 42.",
+        "gameversion": "1.118.257.1020",
+        "depends": []
+    }
+
+    ```
+
+  - Copy `setup/.templates/.devcontainer` to the project root:
+
+    ```bash
+    $ cp -rf setup/.templates/.devcontainer ./ 
+    ```
+
 - **On WSL2 (Windows):**
+
   - In your `.devcontainer/devcontainer.json`, locate the following section (this is how it appears by default):
+
     ```json
     "mounts": [
       "source=__SIMS4_EA_ZIPS_PATH__,target=/workspaces/s4fw/ea_api,type=bind,readonly",
@@ -142,6 +191,7 @@ You can use the provided setup scripts to automatically configure your environme
       "source=/etc/localtime,target=/etc/localtime,type=bind,readonly"
     ]
     ```
+
   - **Replace** the `__SIMS4_EA_ZIPS_PATH__` and `__SIMS4_MODS_PATH__` placeholders with the actual paths to your Sims 4 EA API folder and Mods folder. Do not add new mounts—just replace the variables in the existing lines.
     - `__SIMS4_EA_ZIPS_PATH__`: Path to your Sims 4 EA API folder (e.g., `/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay`)
     - `__SIMS4_MODS_PATH__`: Path to your Sims 4 Mods folder (e.g., `/mnt/c/Users/<your-windows-username>/Documents/Electronic Arts/The Sims 4/Mods`)
@@ -158,7 +208,9 @@ You can use the provided setup scripts to automatically configure your environme
     - Use forward slashes and WSL/Unix format for all paths.
 
 - **On Linux (Steam/Proton):**
-  - In your `.devcontainer/devcontainer.json`, the original section is the same:
+    
+  - In your `.devcontainer/devcontainer.json`, the original section is the same as in WSL2:
+
     ```json
     "mounts": [
       "source=__SIMS4_EA_ZIPS_PATH__,target=/workspaces/s4fw/ea_api,type=bind,readonly",
@@ -167,6 +219,7 @@ You can use the provided setup scripts to automatically configure your environme
       "source=/etc/localtime,target=/etc/localtime,type=bind,readonly"
     ]
     ```
+
   - **Replace** the placeholders as follows:
     - `__SIMS4_EA_ZIPS_PATH__`: Path to your Sims 4 EA API folder (e.g., `/home/<your-username>/.steam/steam/steamapps/common/The Sims 4/Data/Simulation/Gameplay`)
     - `__SIMS4_MODS_PATH__`: Path to your Sims 4 Mods folder (e.g., `/home/<your-username>/.local/share/Steam/steamapps/compatdata/<proton-app-id>/pfx/drive_c/users/steamuser/Documents/Electronic Arts/The Sims 4/Mods`)
@@ -227,7 +280,9 @@ bash tools/decompile.sh --input-dir=ea_compiled --output-dir=lib/ea
 
 ### 4. Build Your Mod
 
-Compile your mod source code from `src/` into the `build/` directory.
+Place the Python source code for your mod under the `src` folder.
+
+Compile your mod source code from `src/` into the `build/` director, by one of the following methods:
 
 **Using VSCode Task:**
 - Open the Command Palette, select `Tasks: Run Task`, and choose **Build Mod**.
@@ -237,7 +292,7 @@ Compile your mod source code from `src/` into the `build/` directory.
 bash tools/build.sh
 ```
 
-*End result: Your mod's compiled files are placed in the `build/` directory.*
+Your scripts will be compiled to `.pyc` files in your `build/` directory
 
 ### 5. Package Your Mod
 
@@ -251,7 +306,23 @@ Package your built mod files into a `.ts4script` archive in the `dist/` director
 bash tools/package.sh
 ```
 
-*End result: Your packaged `.ts4script` mod file is created in the `dist/` directory.*
+This will create a `.ts4script` file in your `dist` folder, using the details from your `mod_info.json` file.
+
+For example, if your `mod_info.json` file looks like:
+
+  ```json
+  {
+      "name": "find.the.ultimate.question",
+      "author": "arthur.phillip.dent",
+      "version": "0.0.1-SNAPSHOT",
+      "description": "Find the question that yields the answer to thea meaning of life, the universe, and everything, which is 42.",
+      "gameversion": "1.118.257.1020",
+      "depends": []
+  }
+
+  ```
+
+  Then your mod file will be called `dist/arthur.phillip.dent-find.the.ultimate.question-0.0.1-SNAPSHOT.ts4script`
 
 ### 6. Deploy Your Mod
 
@@ -266,11 +337,26 @@ Copy your packaged mod into your Sims 4 Mods folder.
 bash tools/deploy.sh
 ```
 
-*End result: Your packaged mod is copied to the `mods/` directory (linked to your Sims 4 Mods folder).*
+Your packaged mod is copied to the `mods/` directory (linked to your Sims 4 Mods folder).
 
 ---
 
 For more details on available tools and options, see [TOOLS.md](TOOLS.md).
 
 **You are now ready to start modding The Sims 4!**
+
+---
+
+## License and Attribution
+
+- This project is licensed under the [MIT License](LICENSE.md).
+- For a list of third-party tools and libraries used, see [ATTRIBUTION.md](ATTRIBUTION.md).
+
+---
+
+## Legal Disclaimer
+
+This project is an independent, community-driven framework intended for educational and personal modding purposes only. It is not affiliated with, endorsed by, or supported by Electronic Arts Inc. ("EA") or Maxis. All trademarks, game content, and intellectual property related to The Sims 4 are the property of their respective owners. Use of this framework and any modifications created with it is at your own risk. Please ensure compliance with EA's modding policies and terms of service.
+
+
 
