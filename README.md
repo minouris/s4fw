@@ -2,18 +2,24 @@
 
 ## Requirements
 
-- **WSL2** Windows Subsystem for Linux
+- **WSL2** Windows Subsystem for Linux *(if on Windows)*
 - **Docker** (with WSL2 integration if on Windows)
 - **Visual Studio Code** (with Remote - Containers extension)
 - **Python 3.7** (provided by the devcontainer)
 - **Git**
 - **The Sims 4** (installed on your system, for access to EA Python API files)
+  - On **Linux**: Supported via **Steam** and/or **Proton** (see setup instructions below)
 - **(Optional) GitHub CLI** (`gh`) for command-line forking
 - **(Optional) unzip** for extracting the template zip
+
+---
 
 ## Structure
 
 - `src/`: Your mod code (to be included in releases)
+- `build/`: The location that compiled code is built to when the `Build Mod` task is run
+- `dist/`: The location that `.ts4script` are written to when the `Package Mod` task is run
+- `mods/`: Mods run by Sims 4, and where packages are copied to by the `Deploy Mod` task
 - `ea_api`: External mount (by Docker) of EA `Data/Simulation/Gameplay` folder for API zips
 - `lib/external/`: External python libraries (for build/debug only, not for release)
 - `lib/ea/`: Decompiled EA Python source (output from decompiling .pyc files)
@@ -92,62 +98,179 @@ If you do not wish to use the GitHub template feature, you can set up your proje
 
 ### Complete the Setup
 
-1. **Install Docker in WSL**
-   - Ensure Docker is installed and running inside your WSL environment. Follow the official Docker documentation for [Docker Desktop on WSL](https://docs.docker.com/desktop/wsl/) or install Docker Engine directly in your WSL distribution.
+#### 1. Install Prerequisites
 
-2. **Edit Devcontainer Volume Mount**
-   - Before opening the container, edit your devcontainer configuration ([.devcontainer/devcontainer.json](`.devcontainer/devcontainer.json`)) to edit the volume mount for the EA Python API zips.
-   - Example:
-     ```json
-     "mounts": [
-       "source=/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay/,target=/workspaces/s4fw/ea_api,type=bind,consistency=cached"
-     ]
-     ```
-   - Adjust the `source` path to match the location where the EA API zips live on your system. **MUST** be a unix path - do not use `C:\Program Files\EA Games\...`
+- **[See detailed instructions for installing VSCode and Docker on Linux and WSL in `doc/REQUIREMENTS.md`](doc/REQUIREMENTS.md)**
 
-3. **Open the Devcontainer**
-   - Open the project in VSCode and reopen in the container.
+#### 3. Configure Devcontainer and EA API Mount
 
-4. **Unpack and Decompile EA API Files**
-   - Use the provided VSCode tasks (see `tasks.json`) or run the equivalent commands in the terminal:
-     - **Unpack API files:** Run the "Unpack EA API" task to extract the necessary files from the game directory into `ea_compiled/`.
-     - **Decompile:** Run the "Decompile EA API" task to convert `.pyc` files in `ea_compiled/` into Python source in `lib/ea/`.
+You can use the provided setup scripts to automatically configure your environment, or edit the configuration manually.
 
-5. **See `TOOLS.md` for Details**
-   - For more detailed instructions and troubleshooting, refer to [TOOLS.md](TOOLS.md).
+**Recommended: Use the Setup Scripts**
 
-## Keeping Your Project Up to Date
+- **On WSL2 (Windows):**
+  - Use the setup script to detect your Sims 4 installation and patch your devcontainer:
+    ```sh
+    setup/setup.sh
+    ```
+    This script will:
+    - Attempt to automatically locate your Sims 4 installation directory on Windows
+    - Update your `.devcontainer/devcontainer.json` to mount the correct EA API folder into the devcontainer
+    - Prompt you to enter or confirm mod metadata (such as mod name, author, and description)
+    - Create or update your `mod_info.json` file with the provided information
 
-If you want to pull in updates from this template repository after you've started your own project, you can add the original repo as an "upstream" remote and merge changes:
+- **On Linux (Steam/Proton):**
+  - Use the setup script to detect your Sims 4 installation and patch your devcontainer:
+    ```sh
+    setup/setup_linux_proton.sh
+    ```
+    This script will:
+    - Attempt to automatically locate your Sims 4 installation directory under your Steam library (including Proton prefixes if used)
+    - Update your `.devcontainer/devcontainer.json` to mount the correct EA API folder into the devcontainer
+    - Prompt you to enter or confirm mod metadata (such as mod name, author, and description)
+    - Create or update your `mod_info.json` file with the provided information
 
-1. **Add Upstream Remote**
-   ```sh
-   git remote add upstream https://github.com/minouris/s4fw.git
-   ```
+**Manual Setup (Alternative):**
 
-2. **Fetch and Merge Updates**
-   ```sh
-   git fetch upstream
-   git merge upstream/main
-   ```
-   - Resolve any merge conflicts if prompted.
-   - Push the merged changes to your own repository:
-     ```sh
-     git push origin main
-     ```
+- **On WSL2 (Windows):**
+  - In your `.devcontainer/devcontainer.json`, locate the following section (this is how it appears by default):
+    ```json
+    "mounts": [
+      "source=__SIMS4_EA_ZIPS_PATH__,target=/workspaces/s4fw/ea_api,type=bind,readonly",
+      "source=__SIMS4_MODS_PATH__,target=/workspaces/s4fw/mods,type=bind",
+      "source=/etc/timezone,target=/etc/timezone,type=bind,readonly",
+      "source=/etc/localtime,target=/etc/localtime,type=bind,readonly"
+    ]
+    ```
+  - **Replace** the `__SIMS4_EA_ZIPS_PATH__` and `__SIMS4_MODS_PATH__` placeholders with the actual paths to your Sims 4 EA API folder and Mods folder. Do not add new mounts—just replace the variables in the existing lines.
+    - `__SIMS4_EA_ZIPS_PATH__`: Path to your Sims 4 EA API folder (e.g., `/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay`)
+    - `__SIMS4_MODS_PATH__`: Path to your Sims 4 Mods folder (e.g., `/mnt/c/Users/<your-windows-username>/Documents/Electronic Arts/The Sims 4/Mods`)
+  - **Example after replacing:**
+    ```json
+    "mounts": [
+      "source=/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay,target=/workspaces/s4fw/ea_api,type=bind,readonly",
+      "source=/mnt/c/Users/<your-windows-username>/Documents/Electronic Arts/The Sims 4/Mods,target=/workspaces/s4fw/mods,type=bind",
+      "source=/etc/timezone,target=/etc/timezone,type=bind,readonly",
+      "source=/etc/localtime,target=/etc/localtime,type=bind,readonly"
+    ]
+    ```
+    - Replace `<your-windows-username>` with your actual Windows username.
+    - Use forward slashes and WSL/Unix format for all paths.
 
-See [GitHub documentation on syncing forks](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork) for more details.
+- **On Linux (Steam/Proton):**
+  - In your `.devcontainer/devcontainer.json`, the original section is the same:
+    ```json
+    "mounts": [
+      "source=__SIMS4_EA_ZIPS_PATH__,target=/workspaces/s4fw/ea_api,type=bind,readonly",
+      "source=__SIMS4_MODS_PATH__,target=/workspaces/s4fw/mods,type=bind",
+      "source=/etc/timezone,target=/etc/timezone,type=bind,readonly",
+      "source=/etc/localtime,target=/etc/localtime,type=bind,readonly"
+    ]
+    ```
+  - **Replace** the placeholders as follows:
+    - `__SIMS4_EA_ZIPS_PATH__`: Path to your Sims 4 EA API folder (e.g., `/home/<your-username>/.steam/steam/steamapps/common/The Sims 4/Data/Simulation/Gameplay`)
+    - `__SIMS4_MODS_PATH__`: Path to your Sims 4 Mods folder (e.g., `/home/<your-username>/.local/share/Steam/steamapps/compatdata/<proton-app-id>/pfx/drive_c/users/steamuser/Documents/Electronic Arts/The Sims 4/Mods`)
+  - **Example after replacing:**
+    ```json
+    "mounts": [
+      "source=/home/<your-username>/.steam/steam/steamapps/common/The Sims 4/Data/Simulation/Gameplay,target=/workspaces/s4fw/ea_api,type=bind,readonly",
+      "source=/home/<your-username>/.local/share/Steam/steamapps/compatdata/<proton-app-id>/pfx/drive_c/users/steamuser/Documents/Electronic Arts/The Sims 4/Mods,target=/workspaces/s4fw/mods,type=bind",
+      "source=/etc/timezone,target=/etc/timezone,type=bind,readonly",
+      "source=/etc/localtime,target=/etc/localtime,type=bind,readonly"
+    ]
+    ```
+    - Replace `<your-username>` and `<proton-app-id>` as appropriate.
+    - If you run Sims 4 natively, use your home Documents path instead for the Mods folder
 
-## License
+---
 
-See [LICENSE](LICENSE) for license information.
+## Next Steps: Open the Devcontainer and Prepare Your Modding Environment
 
-## Attribution
+### 1. Open the Devcontainer
 
-- Sims 4 and related assets are © Electronic Arts Inc. This project is not affiliated with or endorsed by Electronic Arts.
-- This project uses tools by third party authors - please see [ATTRIBUTION.md](ATTRIBUTION.md) for details.
+- Open the project folder in Visual Studio Code.
+- If prompted, click "Reopen in Container" (or use the Command Palette: `Remote-Containers: Reopen in Container`).
+- Wait for the devcontainer to build and initialize.
 
-## Changelog
+*End result: Your development environment is set up with all required tools and paths.*
 
-See [CHANGELOG.md](CHANGELOG.md) for a history of changes to this project.
+### 2. Unpack the EA API Zips
+
+You must extract the EA `.pyc` files from the official zips before decompiling.
+
+**Using VSCode Task:**
+- Open the Command Palette (`Ctrl+Shift+P`), select `Tasks: Run Task`, and choose **Unpack EA API Zips**.
+
+**Or using the command line:**
+```sh
+bash tools/unpack.sh
+```
+
+*End result: EA `.pyc` files are extracted into the `ea_compiled/` directory.*
+
+### 3. Decompile the EA Python Sources
+
+Decompile the `.pyc` files to `.py` sources.
+
+**Using VSCode Task:**
+- Open the Command Palette (`Ctrl+Shift+P`), select `Tasks: Run Task`, and choose one of:
+  - **Decompile EA Scripts (Resume)** (recommended for most cases)
+  - **Decompile EA Scripts (Clean)** (removes previous output first)
+  - **Decompile EA Scripts (With Trace)** (for verbose output)
+
+**Or using the command line:**
+```sh
+bash tools/decompile.sh --input-dir=ea_compiled --output-dir=lib/ea
+```
+
+*End result: Decompiled EA Python source files are available in the `lib/ea/` directory.*
+
+### 4. Build Your Mod
+
+Compile your mod source code from `src/` into the `build/` directory.
+
+**Using VSCode Task:**
+- Open the Command Palette, select `Tasks: Run Task`, and choose **Build Mod**.
+
+**Or using the command line:**
+```sh
+bash tools/build.sh
+```
+
+*End result: Your mod's compiled files are placed in the `build/` directory.*
+
+### 5. Package Your Mod
+
+Package your built mod files into a `.ts4script` archive in the `dist/` directory.
+
+**Using VSCode Task:**
+- Open the Command Palette, select `Tasks: Run Task`, and choose **Package Mod**.
+
+**Or using the command line:**
+```sh
+bash tools/package.sh
+```
+
+*End result: Your packaged `.ts4script` mod file is created in the `dist/` directory.*
+
+### 6. Deploy Your Mod
+
+Copy your packaged mod into your Sims 4 Mods folder.
+
+**Using VSCode Task:**
+- Open the Command Palette, select `Tasks: Run Task`, and choose **Deploy Mod**.
+- Or use **Build + Package + Deploy** to run all steps in sequence.
+
+**Or using the command line:**
+```sh
+bash tools/deploy.sh
+```
+
+*End result: Your packaged mod is copied to the `mods/` directory (linked to your Sims 4 Mods folder).*
+
+---
+
+For more details on available tools and options, see [TOOLS.md](TOOLS.md).
+
+**You are now ready to start modding The Sims 4!**
 
