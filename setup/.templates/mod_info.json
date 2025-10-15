@@ -1,0 +1,8 @@
+{
+    "name": "__MOD_NAME__",
+    "author": "__MOD_AUTHOR__",
+    "version": "0.0.1-SNAPSHOT",
+    "description": "",
+    "gameversion": "__GAME_VERSION__",
+    "depends": []
+}
