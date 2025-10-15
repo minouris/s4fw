@@ -7,16 +7,19 @@
     "vscode": {
       "settings": {
         "python.envFile": "${workspaceFolder}/.env",
-        "terminal.integrated.defaultProfile.linux": "bash"
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "extensions.autoCheckUpdates": false,
+        "extensions.autoUpdate": false
       },
       "extensions": [
         "ms-python.python",
         "loic-pryv.automatic-terminal",
         "ms-python.vscode-pylance",
-        "ms-python.debugpy"
+        "ms-python.debugpy@2024.0.1"
       ]
     }
   },
+  "runArgs": ["--network=host"],
   "remoteUser": "sims4fw",
   "workspaceFolder": "/workspaces/s4fw",
   "mounts": [

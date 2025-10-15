@@ -1,0 +1,32 @@
+{
+    "template_files": [
+        {
+            "input": "setup/.templates/.devcontainer/devcontainer.json",
+            "target_dir": ".devcontainer",
+            "target_name": "devcontainer.json",
+            "values": {
+                "__SIMS4_EA_ZIPS_PATH__": "/mnt/c/Program Files/EA Games/The Sims 4/Data/Simulation/Gameplay",
+                "__SIMS4_MODS_PATH__": "/mnt/c/Users/miken/Documents/Electronic Arts/The Sims 4//Mods"
+            },
+            "condition": "1"
+        },
+        {
+            "input": "setup/.templates/.devcontainer/Dockerfile",
+            "target_dir": ".devcontainer",
+            "target_name": "Dockerfile",
+            "values": {},
+            "condition": "1"
+        },
+        {
+            "input": "setup/.templates/mod_info.json",
+            "target_dir": ".",
+            "target_name": "mod_info.json",
+            "values": {
+                "__MOD_AUTHOR__": "minouris",
+                "__MOD_NAME__": "my.test.mod",
+                "__GAME_VERSION__": "1.118.257.1020"
+            },
+            "condition": "1"
+        }
+    ]
+}

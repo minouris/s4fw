@@ -1,0 +1,32 @@
+{
+    "template_files": [
+        {
+            "input": "${S4FW_TEMPLATES}/.devcontainer/devcontainer.json",
+            "target_dir": ".devcontainer",
+            "target_name": "devcontainer.json",
+            "values": {
+                "__SIMS4_EA_ZIPS_PATH__": "${S4FW_EA_LIB_DIR}",
+                "__SIMS4_MODS_PATH__": "${S4FW_MODS_DIR}"
+            },
+            "condition": "${S4FW_INCLUDE_DEVCONTAINER}"
+        },
+        {
+            "input": "${S4FW_TEMPLATES}/.devcontainer/Dockerfile",
+            "target_dir": ".devcontainer",
+            "target_name": "Dockerfile",
+            "values": {},
+            "condition": "${S4FW_INCLUDE_DEVCONTAINER}"
+        },
+        {
+            "input": "${S4FW_TEMPLATES}/mod_info.json",
+            "target_dir": ".",
+            "target_name": "mod_info.json",
+            "values": {
+                "__MOD_AUTHOR__": "${S4FW_AUTHOR_NAME}",
+                "__MOD_NAME__": "${S4FW_MOD_NAME}",
+                "__GAME_VERSION__": "${S4FW_GAME_VERSION}"
+            },
+            "condition": "1"
+        }
+    ]
+}
