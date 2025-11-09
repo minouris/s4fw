@@ -190,7 +190,7 @@ decompile_file() {
     local errlog="$4"
 
     # Can expand this list with cmd line flags if required, and more tools
-    local decompilers=("pycdc" "uncompyle6" "decompyle3" "unpyc3")
+    local decompilers=( "uncompyle6" "decompyle3" "unpyc3")
     local success=0
     local is_original=1
 

@@ -6,49 +6,32 @@
 #
 # Description: Dev container for Sims 4 Framework development
 
-FROM ubuntu:20.04
+FROM python:3.7.9-slim-buster
 
-# Prevent interactive prompts during package installation
+# Prevent interactive prompts during package installation and set default TZ
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
-# Install build dependencies and system packages
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git unzip zip sudo build-essential cmake libboost-all-dev tzdata jq \
-    wget ca-certificates \
-    libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
-    libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+# Buster is archived; point apt sources to the archive mirrors and disable
+# the 'Valid-Until' check so apt can use older Release files.
+RUN sed -i 's|deb.debian.org|archive.debian.org|g; s|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+ && echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until \
+ && apt-get update -o Acquire::Check-Valid-Until=false \
+ && apt-get install -y --no-install-recommends \
+    build-essential \
+    sudo \
+    tzdata \
+    git \
+    curl \
+    ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
-# Uninstall conflicting Python versions
- RUN apt-get remove --purge python3.8 python3.8-minimal -y && sudo apt-get autoremove -y && sudo apt-get autoclean
-
-# --- Python 3.7 build from source (fallback, slower, but guaranteed version) ---
-RUN cd /tmp && \
-    wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz && \
-    tar xzf Python-3.7.0.tgz && \
-    cd Python-3.7.0 && \
-    ./configure --with-ensurepip=install && \
-    make -j"$(nproc)" && \
-    make altinstall && \
-    cd / && \
-    rm -rf /tmp/Python-3.7.0*
-
-# Create symlinks for python and pip
-RUN ln -s /usr/local/bin/python3.7 /usr/local/bin/python && \
-    ln -s /usr/local/bin/python3.7 /usr/local/bin/python3 && \
-    ln -s /usr/local/bin/pip3.7 /usr/local/bin/pip
+RUN python -m pip install --upgrade pip setuptools wheel && \
+    python -m pip install "pytest==6.2.5" typing_extensions && \
+    python -m pip install "pytest-cov==2.12.1"
 
 # Set fallback timezone (will be overridden by host mount if available)
 ENV TZ=UTC
-
-# Build and install pycdc
-RUN git clone https://github.com/zrax/pycdc.git /opt/pycdc \
-    && mkdir -p /opt/pycdc/build \
-    && cd /opt/pycdc/build \
-    && cmake -DCMAKE_BUILD_TYPE=Release .. \
-    && make -j"$(nproc)" \
-    && cp pycdc /usr/local/bin/pycdc \
-    && chmod +x /usr/local/bin/pycdc \
-    && rm -rf /opt/pycdc/build /opt/pycdc/.git
 
 # Install uncompypython decompilers for decompiling Sims 4 .pyc files
 RUN pip install uncompyle6 decompyle3
@@ -63,3 +46,4 @@ USER sims4fw
 
 # Set the working directory for the new user
 WORKDIR /workspaces/s4fw
+
