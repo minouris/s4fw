@@ -14,6 +14,8 @@
 
 ---
 
+**Super Quick Start Guide:** [Install WSL, Docker, VSCode and this Project in Windows](./doc/installing-wsl-and-docker.md)
+
 ## Structure
 
 - `src/`: Your mod code (to be included in releases)
